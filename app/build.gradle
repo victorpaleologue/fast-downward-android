@@ -14,31 +14,6 @@ android {
         def buildId = getGitCommitHash()
         archivesBaseName = "fastdownward-$versionName-$buildId"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
-
-        // Configure Firebase
-        def firebaseOptionsToResource = [
-                fastDownwardFirebaseProjectID        : 'project_id',
-                fastDownwardFirebaseGoogleAppID      : 'google_app_id',
-                fastDownwardFirebaseWebClientID      : 'default_web_client_id',
-                fastDownwardFirebaseGCMSenderID      : 'gcm_defaultSenderId',
-                fastDownwardFirebaseGoogleAPIKey     : 'google_api_key',
-                fastDownwardFirebaseCrashlyticsAPIKey: 'google_crash_reporting_api_key',
-        ]
-        Boolean withFirebase = true
-        firebaseOptionsToResource.each { entry ->
-            String optionValue = getOption(entry.key)
-            if (optionValue.isEmpty()) {
-                println "Firebase missing credential \"$entry.key\""
-                withFirebase = false
-            }
-            resValue "string", entry.value, optionValue
-        }
-        println "WITH_FIREBASE=$withFirebase"
-        buildConfigField "Boolean", "WITH_FIREBASE", withFirebase.toString()
-        if (withFirebase) {
-            apply plugin: 'com.google.firebase.firebase-perf'
-            apply plugin: 'com.google.firebase.crashlytics'
-        }
     }
 
     compileOptions {
@@ -87,10 +62,6 @@ dependencies {
     implementation 'androidx.constraintlayout:constraintlayout:2.1.0'
     implementation 'com.softbankrobotics.pddl:pddl-planning:1.4.1'
     implementation project(path: ':library')
-
-    // Firebase
-    implementation 'com.google.firebase:firebase-crashlytics:18.1.0'
-    implementation 'com.google.firebase:firebase-perf:20.0.2'
 
     androidTestImplementation 'androidx.test.ext:junit:1.1.3'
     androidTestImplementation 'com.android.support.test:runner:1.0.2'
